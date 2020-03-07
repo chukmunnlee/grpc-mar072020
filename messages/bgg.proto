@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package bgg;
+
+import "google/api/annotations.proto";
+
+option go_package = "bggpb";
+
+message Boardgame {
+  int32 gameId = 1;
+  string name = 2;
+  uint32 ranking = 3;
+  string url = 4;
+}
+
+message FindGameByIdRequest {
+  int32 gameId = 1;
+}
+
+message FindGameByIdResponse {
+  enum Status {
+    NONE = 0;
+    FOUND = 1;
+    NOT_FOUND = 2;
+    ERROR = 3;
+  }
+  Boardgame boardgame = 1;
+  Status status = 2;
+  string text = 3;
+}
+
+service BoardgameService {
+  rpc FindGameById(FindGameByIdRequest) returns (FindGameByIdResponse) { 
+    option(google.api.http) = {
+      //get: "/api/v1/boardgame/{gameId}"
+      get: "/api/v1/search"
+    };
+  };
+}
